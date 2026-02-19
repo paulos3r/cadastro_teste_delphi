@@ -23,11 +23,18 @@ type
     leCodigo: TLabeledEdit;
     LabeledEdit2: TLabeledEdit;
     cbAtivo: TCheckBox;
-    MaskEdit1: TMaskEdit;
-    DateTimePicker1: TDateTimePicker;
-    lbDataNascimento: TLabel;
-    lbCpfCnpj: TLabel;
     leDataCadastro: TLabeledEdit;
+    LabeledEdit1: TLabeledEdit;
+    LabeledEdit3: TLabeledEdit;
+    LabeledEdit4: TLabeledEdit;
+    LabeledEdit5: TLabeledEdit;
+    LabeledEdit6: TLabeledEdit;
+    LabeledEdit7: TLabeledEdit;
+    LabeledEdit8: TLabeledEdit;
+    LabeledEdit9: TLabeledEdit;
+    LabeledEdit10: TLabeledEdit;
+    LabeledEdit12: TLabeledEdit;
+    LabeledEdit13: TLabeledEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }

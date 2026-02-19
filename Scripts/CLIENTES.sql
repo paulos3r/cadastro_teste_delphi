@@ -9,8 +9,9 @@ create table CLIENTES (
   EMAIL         varchar2(50),
   DATA_CADASTRO date default sysdate not null,
   LIMITE        number(10,2) default 0 not null,
+  FORMA_PAGAMENTO_PADRAO varchar2(20),
   
-  ENDERECO    varchar(30),
+  ENDEbairroRECO    varchar(30),
   BAIRRO      varchar(20),
   CIDADE      varchar(23),
   UF          varchar(2),

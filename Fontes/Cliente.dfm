@@ -3,9 +3,13 @@ object FormCliente: TFormCliente
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'FormCliente'
-  ClientHeight = 657
-  ClientWidth = 917
+  ClientHeight = 509
+  ClientWidth = 706
   Color = clBtnFace
+  Constraints.MaxHeight = 550
+  Constraints.MaxWidth = 800
+  Constraints.MinHeight = 450
+  Constraints.MinWidth = 700
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
@@ -16,10 +20,10 @@ object FormCliente: TFormCliente
   object plBotoesDeAcao: TPanel
     Left = 0
     Top = 0
-    Width = 129
-    Height = 657
+    Width = 139
+    Height = 509
     Align = alLeft
-    Anchors = [akLeft, akTop, akRight, akBottom]
+    Anchors = [akTop, akBottom]
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clHighlight
     Font.Height = -12
@@ -27,13 +31,14 @@ object FormCliente: TFormCliente
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    ExplicitHeight = 678
     DesignSize = (
-      129
-      657)
+      139
+      509)
     object sbSalvar: TSpeedButton
       Left = 1
       Top = 1
-      Width = 127
+      Width = 137
       Height = 22
       Align = alTop
       Caption = 'Gravar'
@@ -50,7 +55,7 @@ object FormCliente: TFormCliente
     object sbCancelar: TSpeedButton
       Left = 1
       Top = 23
-      Width = 127
+      Width = 137
       Height = 22
       Align = alTop
       Caption = 'Cancelar'
@@ -67,7 +72,7 @@ object FormCliente: TFormCliente
     object sbExcluir: TSpeedButton
       Left = 1
       Top = 45
-      Width = 127
+      Width = 137
       Height = 22
       Align = alTop
       Caption = 'Excluir'
@@ -83,17 +88,18 @@ object FormCliente: TFormCliente
     end
     object sbPesquisar: TSpeedButton
       Left = 1
-      Top = 263
-      Width = 128
+      Top = 201
+      Width = 138
       Height = 25
       Anchors = [akLeft, akRight]
       Caption = 'Pesquisar'
       ExplicitTop = 232
+      ExplicitWidth = 128
     end
     object sbFechar: TSpeedButton
       Left = 1
-      Top = 634
-      Width = 127
+      Top = 486
+      Width = 137
       Height = 22
       Align = alBottom
       Caption = 'Fechar'
@@ -103,51 +109,143 @@ object FormCliente: TFormCliente
     end
   end
   object plPrincipal: TPanel
-    Left = 129
+    Left = 139
     Top = 0
-    Width = 788
-    Height = 657
+    Width = 567
+    Height = 509
     Align = alClient
     TabOrder = 1
+    ExplicitLeft = 144
+    ExplicitHeight = 511
     DesignSize = (
-      788
-      657)
-    object lbDataNascimento: TLabel
-      Left = 120
-      Top = 56
-      Width = 107
-      Height = 15
-      Caption = 'Data de Nascimento'
-    end
-    object lbCpfCnpj: TLabel
-      Left = 8
-      Top = 56
-      Width = 19
-      Height = 15
-      Caption = 'Cpf'
-    end
+      567
+      509)
     object pcCliente: TPageControl
-      Left = 5
+      Left = 6
       Top = 102
-      Width = 786
-      Height = 554
+      Width = 565
+      Height = 406
       ActivePage = tsPrincipal
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
+      ExplicitWidth = 560
+      ExplicitHeight = 575
       object tsPrincipal: TTabSheet
         Caption = 'Principal'
+        object LabeledEdit1: TLabeledEdit
+          Left = 11
+          Top = 23
+          Width = 101
+          Height = 23
+          EditLabel.Width = 44
+          EditLabel.Height = 15
+          EditLabel.Caption = 'Telefone'
+          EditMask = '!\(999\)000-0000;1;_'
+          MaxLength = 13
+          TabOrder = 0
+          Text = '(   )   -    '
+        end
+        object LabeledEdit3: TLabeledEdit
+          Left = 134
+          Top = 23
+          Width = 319
+          Height = 23
+          EditLabel.Width = 34
+          EditLabel.Height = 15
+          EditLabel.Caption = 'E-mail'
+          TabOrder = 1
+          Text = ''
+        end
+        object LabeledEdit4: TLabeledEdit
+          Left = 11
+          Top = 73
+          Width = 101
+          Height = 23
+          EditLabel.Width = 91
+          EditLabel.Height = 15
+          EditLabel.Caption = 'Limite de Cr'#233'dito'
+          TabOrder = 2
+          Text = ''
+        end
+        object LabeledEdit5: TLabeledEdit
+          Left = 134
+          Top = 73
+          Width = 187
+          Height = 23
+          EditLabel.Width = 154
+          EditLabel.Height = 15
+          EditLabel.Caption = 'Forma de pagamento Padr'#227'o'
+          TabOrder = 3
+          Text = ''
+        end
       end
       object tsEndereco: TTabSheet
         Caption = 'Endere'#231'o'
         ImageIndex = 1
+        object LabeledEdit8: TLabeledEdit
+          Left = 3
+          Top = 24
+          Width = 518
+          Height = 23
+          EditLabel.Width = 49
+          EditLabel.Height = 15
+          EditLabel.Caption = 'Endere'#231'o'
+          TabOrder = 0
+          Text = ''
+        end
+        object LabeledEdit9: TLabeledEdit
+          Left = 3
+          Top = 73
+          Width = 182
+          Height = 23
+          EditLabel.Width = 31
+          EditLabel.Height = 15
+          EditLabel.Caption = 'Bairro'
+          TabOrder = 1
+          Text = ''
+        end
+        object LabeledEdit10: TLabeledEdit
+          Left = 201
+          Top = 73
+          Width = 165
+          Height = 23
+          EditLabel.Width = 37
+          EditLabel.Height = 15
+          EditLabel.Caption = 'Cidade'
+          TabOrder = 2
+          Text = ''
+        end
+        object LabeledEdit12: TLabeledEdit
+          Left = 381
+          Top = 73
+          Width = 52
+          Height = 23
+          EditLabel.Width = 14
+          EditLabel.Height = 15
+          EditLabel.Caption = 'UF'
+          TabOrder = 3
+          Text = ''
+        end
+        object LabeledEdit13: TLabeledEdit
+          Left = 450
+          Top = 73
+          Width = 71
+          Height = 23
+          EditLabel.Width = 21
+          EditLabel.Height = 15
+          EditLabel.Caption = 'CEP'
+          EditMask = '00000\-999;1;_'
+          MaxLength = 9
+          TabOrder = 4
+          Text = '     -   '
+        end
       end
     end
     object leCodigo: TLabeledEdit
       Left = 6
-      Top = 23
-      Width = 66
+      Top = 25
+      Width = 76
       Height = 23
-      Anchors = [akLeft, akRight]
       EditLabel.Width = 39
       EditLabel.Height = 15
       EditLabel.Caption = 'C'#243'digo'
@@ -155,11 +253,10 @@ object FormCliente: TFormCliente
       Text = ''
     end
     object LabeledEdit2: TLabeledEdit
-      Left = 88
-      Top = 23
-      Width = 385
+      Left = 92
+      Top = 27
+      Width = 390
       Height = 23
-      Anchors = [akLeft, akRight]
       EditLabel.Width = 33
       EditLabel.Height = 15
       EditLabel.Caption = 'Nome'
@@ -167,49 +264,54 @@ object FormCliente: TFormCliente
       Text = ''
     end
     object cbAtivo: TCheckBox
-      Left = 488
+      Left = 496
       Top = 26
-      Width = 57
-      Height = 17
-      Anchors = [akLeft, akRight]
+      Width = 61
+      Height = 23
       Caption = 'Ativo'
       Checked = True
       State = cbChecked
       TabOrder = 3
     end
-    object MaskEdit1: TMaskEdit
-      Left = 6
-      Top = 73
-      Width = 99
-      Height = 23
-      Anchors = [akLeft, akRight]
-      EditMask = '000.000.000-00;0;_'
-      MaxLength = 14
-      TabOrder = 4
-      Text = ''
-    end
-    object DateTimePicker1: TDateTimePicker
-      Left = 120
-      Top = 73
-      Width = 107
-      Height = 23
-      Anchors = [akLeft, akRight]
-      Date = 46068.000000000000000000
-      Time = 0.939575821757898700
-      TabOrder = 5
-    end
     object leDataCadastro: TLabeledEdit
-      Left = 680
+      Left = 461
       Top = 73
-      Width = 97
+      Width = 96
       Height = 23
-      Anchors = [akRight]
       EditLabel.Width = 90
       EditLabel.Height = 15
       EditLabel.Caption = 'Data de Cadastro'
       Enabled = False
+      EditMask = '!99/99/00;1;_'
+      MaxLength = 8
+      TabOrder = 4
+      Text = '  /  /  '
+    end
+    object LabeledEdit6: TLabeledEdit
+      Left = 6
+      Top = 73
+      Width = 120
+      Height = 23
+      EditLabel.Width = 21
+      EditLabel.Height = 15
+      EditLabel.Caption = 'CPF'
+      EditMask = '000.000.000-00;1;_'
+      MaxLength = 14
+      TabOrder = 5
+      Text = '   .   .   -  '
+    end
+    object LabeledEdit7: TLabeledEdit
+      Left = 144
+      Top = 73
+      Width = 113
+      Height = 23
+      EditLabel.Width = 107
+      EditLabel.Height = 15
+      EditLabel.Caption = 'Data de Nascimento'
+      EditMask = '!99/99/0000;1;_'
+      MaxLength = 10
       TabOrder = 6
-      Text = ''
+      Text = '  /  /    '
     end
   end
 end
