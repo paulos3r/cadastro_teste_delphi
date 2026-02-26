@@ -2,7 +2,7 @@ object FormCliente: TFormCliente
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
-  Caption = 'FormCliente'
+  Caption = 'Cadastro de Cliente'
   ClientHeight = 509
   ClientWidth = 706
   Color = clBtnFace
@@ -16,6 +16,8 @@ object FormCliente: TFormCliente
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
   TextHeight = 15
   object plBotoesDeAcao: TPanel
     Left = 0
@@ -31,7 +33,6 @@ object FormCliente: TFormCliente
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitHeight = 678
     DesignSize = (
       139
       509)
@@ -65,6 +66,7 @@ object FormCliente: TFormCliente
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+      OnClick = sbCancelarClick
       ExplicitLeft = 56
       ExplicitTop = 184
       ExplicitWidth = 23
@@ -103,6 +105,7 @@ object FormCliente: TFormCliente
       Height = 22
       Align = alBottom
       Caption = 'Fechar'
+      OnClick = sbFecharClick
       ExplicitLeft = 56
       ExplicitTop = 280
       ExplicitWidth = 23
@@ -115,8 +118,6 @@ object FormCliente: TFormCliente
     Height = 509
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 144
-    ExplicitHeight = 511
     DesignSize = (
       567
       509)
@@ -125,27 +126,26 @@ object FormCliente: TFormCliente
       Top = 102
       Width = 565
       Height = 406
-      ActivePage = tsPrincipal
+      ActivePage = tsEndereco
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
-      ExplicitWidth = 560
-      ExplicitHeight = 575
       object tsPrincipal: TTabSheet
         Caption = 'Principal'
-        object LabeledEdit1: TLabeledEdit
+        object leTelefone: TLabeledEdit
           Left = 11
           Top = 23
-          Width = 101
+          Width = 97
           Height = 23
           EditLabel.Width = 44
           EditLabel.Height = 15
           EditLabel.Caption = 'Telefone'
-          EditMask = '!\(999\)000-0000;1;_'
+          EditMask = '!\(99\)0000-0000;1;_'
           MaxLength = 13
+          NumbersOnly = True
           TabOrder = 0
-          Text = '(   )   -    '
+          Text = '(  )    -    '
         end
-        object LabeledEdit3: TLabeledEdit
+        object leEmail: TLabeledEdit
           Left = 134
           Top = 23
           Width = 319
@@ -156,7 +156,7 @@ object FormCliente: TFormCliente
           TabOrder = 1
           Text = ''
         end
-        object LabeledEdit4: TLabeledEdit
+        object leLimiteCredito: TLabeledEdit
           Left = 11
           Top = 73
           Width = 101
@@ -164,10 +164,11 @@ object FormCliente: TFormCliente
           EditLabel.Width = 91
           EditLabel.Height = 15
           EditLabel.Caption = 'Limite de Cr'#233'dito'
+          NumbersOnly = True
           TabOrder = 2
           Text = ''
         end
-        object LabeledEdit5: TLabeledEdit
+        object leFormaPagamentoPadrao: TLabeledEdit
           Left = 134
           Top = 73
           Width = 187
@@ -182,7 +183,7 @@ object FormCliente: TFormCliente
       object tsEndereco: TTabSheet
         Caption = 'Endere'#231'o'
         ImageIndex = 1
-        object LabeledEdit8: TLabeledEdit
+        object leEndereco: TLabeledEdit
           Left = 3
           Top = 24
           Width = 518
@@ -193,7 +194,7 @@ object FormCliente: TFormCliente
           TabOrder = 0
           Text = ''
         end
-        object LabeledEdit9: TLabeledEdit
+        object leBairro: TLabeledEdit
           Left = 3
           Top = 73
           Width = 182
@@ -204,7 +205,7 @@ object FormCliente: TFormCliente
           TabOrder = 1
           Text = ''
         end
-        object LabeledEdit10: TLabeledEdit
+        object leCidade: TLabeledEdit
           Left = 201
           Top = 73
           Width = 165
@@ -215,7 +216,7 @@ object FormCliente: TFormCliente
           TabOrder = 2
           Text = ''
         end
-        object LabeledEdit12: TLabeledEdit
+        object leUf: TLabeledEdit
           Left = 381
           Top = 73
           Width = 52
@@ -226,7 +227,7 @@ object FormCliente: TFormCliente
           TabOrder = 3
           Text = ''
         end
-        object LabeledEdit13: TLabeledEdit
+        object leCep: TLabeledEdit
           Left = 450
           Top = 73
           Width = 71
@@ -251,8 +252,9 @@ object FormCliente: TFormCliente
       EditLabel.Caption = 'C'#243'digo'
       TabOrder = 1
       Text = ''
+      OnKeyDown = leCodigoKeyDown
     end
-    object LabeledEdit2: TLabeledEdit
+    object leNome: TLabeledEdit
       Left = 92
       Top = 27
       Width = 390
@@ -276,18 +278,18 @@ object FormCliente: TFormCliente
     object leDataCadastro: TLabeledEdit
       Left = 461
       Top = 73
-      Width = 96
+      Width = 94
       Height = 23
       EditLabel.Width = 90
       EditLabel.Height = 15
       EditLabel.Caption = 'Data de Cadastro'
       Enabled = False
-      EditMask = '!99/99/00;1;_'
-      MaxLength = 8
+      EditMask = '!99/99/0000;1;_'
+      MaxLength = 10
       TabOrder = 4
-      Text = '  /  /  '
+      Text = '  /  /    '
     end
-    object LabeledEdit6: TLabeledEdit
+    object leCPF: TLabeledEdit
       Left = 6
       Top = 73
       Width = 120
@@ -300,7 +302,7 @@ object FormCliente: TFormCliente
       TabOrder = 5
       Text = '   .   .   -  '
     end
-    object LabeledEdit7: TLabeledEdit
+    object leDataNascimento: TLabeledEdit
       Left = 144
       Top = 73
       Width = 113
