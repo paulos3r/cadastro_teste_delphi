@@ -84,6 +84,7 @@ object FormCliente: TFormCliente
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+      OnClick = sbExcluirClick
       ExplicitLeft = 80
       ExplicitTop = 176
       ExplicitWidth = 23
@@ -134,16 +135,13 @@ object FormCliente: TFormCliente
         object leTelefone: TLabeledEdit
           Left = 11
           Top = 23
-          Width = 97
+          Width = 101
           Height = 23
           EditLabel.Width = 44
           EditLabel.Height = 15
           EditLabel.Caption = 'Telefone'
-          EditMask = '!\(99\)0000-0000;1;_'
-          MaxLength = 13
-          NumbersOnly = True
           TabOrder = 0
-          Text = '(  )    -    '
+          Text = ''
         end
         object leEmail: TLabeledEdit
           Left = 134
@@ -250,6 +248,7 @@ object FormCliente: TFormCliente
       EditLabel.Width = 39
       EditLabel.Height = 15
       EditLabel.Caption = 'C'#243'digo'
+      NumbersOnly = True
       TabOrder = 1
       Text = ''
       OnKeyDown = leCodigoKeyDown
@@ -292,15 +291,13 @@ object FormCliente: TFormCliente
     object leCPF: TLabeledEdit
       Left = 6
       Top = 73
-      Width = 120
+      Width = 116
       Height = 23
       EditLabel.Width = 21
       EditLabel.Height = 15
       EditLabel.Caption = 'CPF'
-      EditMask = '000.000.000-00;1;_'
-      MaxLength = 14
       TabOrder = 5
-      Text = '   .   .   -  '
+      Text = ''
     end
     object leDataNascimento: TLabeledEdit
       Left = 144

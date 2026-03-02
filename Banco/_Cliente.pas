@@ -61,6 +61,7 @@ type
     procedure Excluir;
 
     function Buscar():TObjectList<TCliente>;
+    function BuscarPorId(const Value:Integer):TCliente;
   end;
 
 implementation
@@ -126,7 +127,7 @@ end;
 
 procedure TCliente.SetCliente_id(const Value: Integer);
 begin
-  if Value>0 then
+  if Value<=0 then
     raise Exception.Create('O Código do cadastro deve ser maior que 0.');
 
   FCliente_id := Value;
@@ -233,20 +234,20 @@ begin
       'CEP = :CEP ' +
       'where CLIENTE_ID = :CLIENTE_ID';
 
-    qry.ParamByName('CLIENTE_ID').AsInteger := FCliente_id;
-    qry.ParamByName('NOME').AsString := FNome;
+    qry.ParamByName('CLIENTE_ID').AsInteger       := FCliente_id;
+    qry.ParamByName('NOME').AsString              := FNome;
     qry.ParamByName('DATA_NASCIMENTO').AsDateTime := FData_nascimento;
-    qry.ParamByName('STATUS').AsString := FStatus;
-    qry.ParamByName('CPF_CNPJ').AsString := FCpf_cnpj;
-    qry.ParamByName('TELEFONE').AsString := FTelefone;
-    qry.ParamByName('EMAIL').AsString := FEmail;
-    qry.ParamByName('DATA_CADASTRO').AsDateTime := FData_cadastro;
-    qry.ParamByName('LIMITE').AsCurrency := FLimite;
-    qry.ParamByName('ENDERECO').AsString := FEndereco;
-    qry.ParamByName('BAIRRO').AsString := FBairro;
-    qry.ParamByName('CIDADE').AsString := FCidade;
-    qry.ParamByName('UF').AsString := FUf;
-    qry.ParamByName('CEP').AsString := FCep;
+    qry.ParamByName('STATUS').AsString            := FStatus;
+    qry.ParamByName('CPF_CNPJ').AsString          := FCpf_cnpj;
+    qry.ParamByName('TELEFONE').AsString          := FTelefone;
+    qry.ParamByName('EMAIL').AsString             := FEmail;
+    qry.ParamByName('DATA_CADASTRO').AsDateTime   := FData_cadastro;
+    qry.ParamByName('LIMITE').AsCurrency          := FLimite;
+    qry.ParamByName('ENDERECO').AsString          := FEndereco;
+    qry.ParamByName('BAIRRO').AsString            := FBairro;
+    qry.ParamByName('CIDADE').AsString            := FCidade;
+    qry.ParamByName('UF').AsString                := FUf;
+    qry.ParamByName('CEP').AsString               := FCep;
 
     if not Conn.InTransaction then
       Conn.StartTransaction;
@@ -276,9 +277,9 @@ var
 begin
   Result := TObjectList<TCliente>.Create(True);
   qry := TZQuery.Create(nil);
+  qry.Connection := dmConexaoOracle.zConexao;
 
   try
-    qry.Connection := dmConexaoOracle.zConexao;
     qry.SQL.Text :=
         'select CLIENTE_ID, NOME, DATA_NASCIMENTO, STATUS, CPF_CNPJ, ' +
         'TELEFONE, EMAIL, DATA_CADASTRO, LIMITE, ' +
@@ -319,6 +320,51 @@ begin
   end;
 end;
 
+function TCliente.BuscarPorId(const Value: Integer): TCliente;
+var qry: TZQuery;
+begin
+  Result := nil;
+
+  qry:= TZQuery.Create(nil);
+  qry.Connection := dmConexaoOracle.zConexao;
+
+  try
+    qry.Connection := dmConexaoOracle.zConexao;
+    qry.SQL.Text :=
+        'select CLIENTE_ID, NOME, DATA_NASCIMENTO, STATUS, CPF_CNPJ, ' +
+        'TELEFONE, EMAIL, DATA_CADASTRO, LIMITE, ' +
+        'ENDERECO, BAIRRO, CIDADE, UF, CEP ' +
+        'from CLIENTES ' +
+        'where CLIENTE_ID = :CLIENTE_ID';
+
+        qry.ParamByName('CLIENTE_ID').AsInteger := Value;
+
+    qry.Open;
+
+    if not qry.Eof then begin
+      Result := TCliente.Create;
+
+      Result.FCliente_id     := qry.FieldByName('CLIENTE_ID').AsInteger;
+      Result.FNome           := qry.FieldByName('NOME').AsString;
+      Result.FData_nascimento := qry.FieldByName('DATA_NASCIMENTO').AsDateTime;
+      Result.FStatus         := qry.FieldByName('STATUS').AsString;
+      Result.FCpf_cnpj       := qry.FieldByName('CPF_CNPJ').AsString;
+      Result.FTelefone       := qry.FieldByName('TELEFONE').AsString;
+      Result.FEmail          := qry.FieldByName('EMAIL').AsString;
+      Result.FData_cadastro  := qry.FieldByName('DATA_CADASTRO').AsDateTime;
+      Result.FLimite         := qry.FieldByName('LIMITE').AsCurrency;
+      Result.FEndereco       := qry.FieldByName('ENDERECO').AsString;
+      Result.FBairro         := qry.FieldByName('BAIRRO').AsString;
+      Result.FCidade         := qry.FieldByName('CIDADE').AsString;
+      Result.FUf             := qry.FieldByName('UF').AsString;
+      Result.FCep            := qry.FieldByName('CEP').AsString;
+    end;
+
+  finally
+    qry.Free;
+  end;
+end;
+
 procedure TCliente.Cadastrar;
 var qry:TZQuery; conn:TZConnection;
 begin
@@ -338,22 +384,22 @@ begin
       ':TELEFONE, :EMAIL, :DATA_CADASTRO, :LIMITE, ' +
       ':ENDERECO, :BAIRRO, :CIDADE, :UF, :CEP)';
 
-    qry.ParamByName('CLIENTE_ID').AsInteger := FCliente_id;
-    qry.ParamByName('NOME').AsString := FNome;
+    qry.ParamByName('CLIENTE_ID').AsInteger       := FCliente_id;
+    qry.ParamByName('NOME').AsString              := FNome;
     qry.ParamByName('DATA_NASCIMENTO').AsDateTime := FData_nascimento;
-    qry.ParamByName('STATUS').AsString := FStatus;
-    qry.ParamByName('CPF_CNPJ').AsString := FCpf_cnpj;
+    qry.ParamByName('STATUS').AsString            := FStatus;
+    qry.ParamByName('CPF_CNPJ').AsString          := FCpf_cnpj;
 
-    qry.ParamByName('TELEFONE').AsString := FTelefone;
-    qry.ParamByName('EMAIL').AsString := FEmail;
+    qry.ParamByName('TELEFONE').AsString        := FTelefone;
+    qry.ParamByName('EMAIL').AsString           := FEmail;
     qry.ParamByName('DATA_CADASTRO').AsDateTime := FData_cadastro;
-    qry.ParamByName('LIMITE').AsCurrency := FLimite;
+    qry.ParamByName('LIMITE').AsCurrency        := FLimite;
 
     qry.ParamByName('ENDERECO').AsString := FEndereco;
-    qry.ParamByName('BAIRRO').AsString := FBairro;
-    qry.ParamByName('CIDADE').AsString := FCidade;
-    qry.ParamByName('UF').AsString := FUf;
-    qry.ParamByName('CEP').AsString := FCep;
+    qry.ParamByName('BAIRRO').AsString   := FBairro;
+    qry.ParamByName('CIDADE').AsString   := FCidade;
+    qry.ParamByName('UF').AsString       := FUf;
+    qry.ParamByName('CEP').AsString      := FCep;
 
     if not conn.InTransaction then
       conn.StartTransaction;
