@@ -15,6 +15,7 @@ type
     FEmail:string;
     FData_cadastro:TDateTime;
     FLimite:Double;
+    FFormaPamento:string;
 
     FEndereco:string;
     FBairro:string;
@@ -49,6 +50,7 @@ type
     property email:string read FEmail write SetEmail;
     property data_cadastro:TDateTime read FData_cadastro write FData_cadastro ;
     property limite:Double read FLimite write SetLimite;
+    property forma_pagamento:string read FFormaPamento write FFormaPamento;
 
     property endereco:string read FEndereco write SetEndereco;
     property bairro:string read FBairro write SetBairro;

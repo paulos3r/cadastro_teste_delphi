@@ -49,6 +49,7 @@ object FormCliente: TFormCliente
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+      OnClick = sbSalvarClick
       ExplicitLeft = 48
       ExplicitTop = 16
       ExplicitWidth = 23
