@@ -113,7 +113,7 @@ end;
 
 procedure TCliente.SetCep(const Value: string);
 begin
-  if Value.Length = 9 then
+  if Value.Length <> 9 then
     raise Exception.Create('CEP inválido: ' +Value + ', deve ser informado #####-###' );
 
   FCep := Value;
@@ -378,15 +378,14 @@ begin
 
     qry.SQL.Text :=
       'insert into CLIENTES (' +
-      'CLIENTE_ID, NOME, DATA_NASCIMENTO, STATUS, CPF_CNPJ, ' +
+      'NOME, DATA_NASCIMENTO, STATUS, CPF_CNPJ, ' +
       'TELEFONE, EMAIL, DATA_CADASTRO, LIMITE, ' +
       'ENDERECO, BAIRRO, CIDADE, UF, CEP) ' +
       'values (' +
-      ':CLIENTE_ID, :NOME, :DATA_NASCIMENTO, :STATUS, :CPF_CNPJ, ' +
+      ':NOME, :DATA_NASCIMENTO, :STATUS, :CPF_CNPJ, ' +
       ':TELEFONE, :EMAIL, :DATA_CADASTRO, :LIMITE, ' +
       ':ENDERECO, :BAIRRO, :CIDADE, :UF, :CEP)';
 
-    qry.ParamByName('CLIENTE_ID').AsInteger       := FCliente_id;
     qry.ParamByName('NOME').AsString              := FNome;
     qry.ParamByName('DATA_NASCIMENTO').AsDateTime := FData_nascimento;
     qry.ParamByName('STATUS').AsString            := FStatus;

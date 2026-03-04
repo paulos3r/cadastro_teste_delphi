@@ -35,6 +35,9 @@ type
     leCidade: TLabeledEdit;
     leUf: TLabeledEdit;
     leCep: TLabeledEdit;
+    rgTipoCliente: TRadioGroup;
+    rbFisica: TRadioButton;
+    rbJuridica: TRadioButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -44,6 +47,8 @@ type
     procedure sbFecharClick(Sender: TObject);
     procedure sbExcluirClick(Sender: TObject);
     procedure sbSalvarClick(Sender: TObject);
+    procedure rbFisicaClick(Sender: TObject);
+    procedure rbJuridicaClick(Sender: TObject);
   private
     { Private declarations }
     procedure Biblioteca( Value: Boolean);
@@ -88,6 +93,7 @@ begin
     Key:=0;
     Biblioteca(true);
     leDataCadastro.Enabled:=false;
+    leNome.SetFocus;
 
     if Trim(leCodigo.Text) = '' then  begin
       leDataCadastro.Text:= DateToStr(now);
@@ -114,10 +120,12 @@ begin
         if Length(cliente.cpf_cnpj)=11 then begin
           mascara_cpf_cnpj:='000.000.000-00;0;_';
           leCPF.EditLabel.Caption:='CPF';
+          rbFisica.Checked:=true;
         end
         else if Length(cliente.cpf_cnpj)=14 then begin
           mascara_cpf_cnpj:='00.000.000/0000-00;0;_';
           leCPF.EditLabel.Caption:='CNPJ';
+          rbJuridica.Checked:=true;
         end
         else
           mascara_cpf_cnpj:='';
@@ -133,6 +141,7 @@ begin
           mascara_telefone := '(00)0000-0000;0;_'
         else
           mascara_telefone:='';
+
         leTelefone.EditMask := mascara_telefone;
         leTelefone.Text := cliente.telefone;
         leEmail.Text:=cliente.email;
@@ -145,13 +154,25 @@ begin
         leUf.Text:= cliente.uf;
         leCep.Text:= cliente.cep
       end
-      else
+      else begin
         ShowMessage('Cliente não encontrado.');
+        Biblioteca(false);
+        leCodigo.SetFocus;
+      end;
     finally
       cliente.Free;
     end;
-
   end;
+end;
+
+procedure TFormCliente.rbFisicaClick(Sender: TObject);
+begin
+  leCPF.EditMask:='000.000.000-00;0;_';
+end;
+
+procedure TFormCliente.rbJuridicaClick(Sender: TObject);
+begin
+  leCPF.EditMask:='00.000.000/0000-00;0;_';
 end;
 
 {$ENDREGION}
@@ -178,6 +199,10 @@ begin
         if Value<>true then Clear;
         Enabled:=Value
       end;
+    end
+    else if componente is TRadioButton then begin
+      with TRadioGroup(componente) do
+        Enabled:=Value;
     end
     else if componente is TSpeedButton then begin
       with TSpeedButton(componente) do
@@ -242,46 +267,65 @@ end;
 procedure TFormCliente.sbSalvarClick(Sender: TObject);
 var cliente: TCliente;
 codigo:Integer;
+existe:Boolean;
+
 begin
 
   leDataCadastro.Enabled:=false;
 
-  if not TryStrToInt( leCodigo.Text, codigo ) then begin
-    ShowMessage('Código inválido.');
-    Exit;
-  end;
+  if not TryStrToInt( leCodigo.Text, codigo ) then
+    codigo:=0;
+
+
   cliente := TCliente.Create;
 
   try
-    if Assigned(cliente.BuscarPorId(codigo)) then begin
-
-      cliente.nome:=leNome.Text;
-      if cbAtivo.Checked then
-        cliente.status:='ATIVO'
-      else
-        cliente.status:='INATIVO';
-
-      cliente.cpf_cnpj:= TRegEx.Replace(leCPF.Text, '[^0-9]', '');
-
-      cliente.data_nascimento:= StrToDate(leDataNascimento.Text);
-      cliente.data_cadastro:= StrToDate(leDataCadastro.Text);
-      cliente.telefone:= TRegEx.Replace(leTelefone.Text, '[^0-9]', '');
-      cliente.email:= leEmail.Text;
-      cliente.limite:= StrToFloat(leLimiteCredito.Text);
-      cliente.forma_pagamento:= leFormaPagamentoPadrao.Text;
-
-      cliente.endereco:= leEndereco.Text;
-      cliente.bairro:= leBairro.Text;
-      cliente.cidade:=leCidade.Text;
-      cliente.uf:= leUf.Text;
-      cliente.cep:= leCep.Text;
-
-      cliente.Cadastrar;
-
-      ShowMessage('Cliente cadastrado com sucesso!')
-    end
+    if codigo>0 then cliente.codigo:= codigo;
+    cliente.nome:=leNome.Text;
+    if cbAtivo.Checked then
+      cliente.status:='ATIVO'
     else
-      ShowMessage('Cliente não encontrado.');
+      cliente.status:='INATIVO';
+
+    cliente.cpf_cnpj:= TRegEx.Replace(leCPF.Text, '[^0-9]', '');
+
+    cliente.data_nascimento:= StrToDate(leDataNascimento.Text);
+    cliente.data_cadastro:= StrToDate(leDataCadastro.Text);
+    cliente.telefone:= TRegEx.Replace(leTelefone.Text, '[^0-9]', '');
+    cliente.email:= leEmail.Text;
+    cliente.limite:= StrToFloat(leLimiteCredito.Text);
+    cliente.forma_pagamento:= leFormaPagamentoPadrao.Text;
+
+    cliente.endereco:= leEndereco.Text;
+    cliente.bairro:= leBairro.Text;
+    cliente.cidade:=leCidade.Text;
+    cliente.uf:= leUf.Text;
+    cliente.cep:= leCep.Text;
+
+
+
+    if codigo>0 then begin
+      try
+        cliente.Atualizar(codigo);
+        ShowMessage('Salvo com sucesso!')
+      except
+        on E: Exception do begin
+          MessageDlg('Erro ao gravar a informações' + sLineBreak +
+          'Detalhe: ' + E.Message, TMsgDlgType.mtError, [mbOk], 0);
+        end;
+      end;
+    end
+    else begin
+      try
+        cliente.Cadastrar;
+        ShowMessage('Salvo com sucesso!')
+      except
+        on E: Exception do begin
+          MessageDlg('Erro ao gravar a informações' + sLineBreak +
+          'Detalhe: ' + E.Message, TMsgDlgType.mtError, [mbOk], 0);
+        end;
+      end;
+    end;
   finally
     cliente.Free;
     Biblioteca(false);

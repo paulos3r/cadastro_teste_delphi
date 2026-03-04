@@ -128,7 +128,7 @@ object FormCliente: TFormCliente
       Top = 102
       Width = 565
       Height = 406
-      ActivePage = tsEndereco
+      ActivePage = tsPrincipal
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       object tsPrincipal: TTabSheet
@@ -145,7 +145,7 @@ object FormCliente: TFormCliente
           Text = ''
         end
         object leEmail: TLabeledEdit
-          Left = 134
+          Left = 128
           Top = 23
           Width = 319
           Height = 23
@@ -168,7 +168,7 @@ object FormCliente: TFormCliente
           Text = ''
         end
         object leFormaPagamentoPadrao: TLabeledEdit
-          Left = 134
+          Left = 128
           Top = 73
           Width = 187
           Height = 23
@@ -183,7 +183,7 @@ object FormCliente: TFormCliente
         Caption = 'Endere'#231'o'
         ImageIndex = 1
         object leEndereco: TLabeledEdit
-          Left = 3
+          Left = 11
           Top = 24
           Width = 518
           Height = 23
@@ -194,7 +194,7 @@ object FormCliente: TFormCliente
           Text = ''
         end
         object leBairro: TLabeledEdit
-          Left = 3
+          Left = 11
           Top = 73
           Width = 182
           Height = 23
@@ -205,7 +205,7 @@ object FormCliente: TFormCliente
           Text = ''
         end
         object leCidade: TLabeledEdit
-          Left = 201
+          Left = 209
           Top = 73
           Width = 165
           Height = 23
@@ -216,7 +216,7 @@ object FormCliente: TFormCliente
           Text = ''
         end
         object leUf: TLabeledEdit
-          Left = 381
+          Left = 390
           Top = 73
           Width = 52
           Height = 23
@@ -227,7 +227,7 @@ object FormCliente: TFormCliente
           Text = ''
         end
         object leCep: TLabeledEdit
-          Left = 450
+          Left = 458
           Top = 73
           Width = 71
           Height = 23
@@ -243,9 +243,9 @@ object FormCliente: TFormCliente
     end
     object leCodigo: TLabeledEdit
       Left = 6
-      Top = 25
+      Top = 27
       Width = 76
-      Height = 23
+      Height = 22
       EditLabel.Width = 39
       EditLabel.Height = 15
       EditLabel.Caption = 'C'#243'digo'
@@ -290,9 +290,9 @@ object FormCliente: TFormCliente
       Text = '  /  /    '
     end
     object leCPF: TLabeledEdit
-      Left = 6
+      Left = 169
       Top = 73
-      Width = 116
+      Width = 132
       Height = 23
       EditLabel.Width = 21
       EditLabel.Height = 15
@@ -301,7 +301,7 @@ object FormCliente: TFormCliente
       Text = ''
     end
     object leDataNascimento: TLabeledEdit
-      Left = 144
+      Left = 317
       Top = 73
       Width = 113
       Height = 23
@@ -312,6 +312,34 @@ object FormCliente: TFormCliente
       MaxLength = 10
       TabOrder = 6
       Text = '  /  /    '
+    end
+    object rgTipoCliente: TRadioGroup
+      Left = 6
+      Top = 54
+      Width = 147
+      Height = 42
+      Caption = 'Tipo de Cliente'
+      TabOrder = 7
+    end
+    object rbFisica: TRadioButton
+      Left = 13
+      Top = 73
+      Width = 63
+      Height = 17
+      Caption = 'F'#237'sica'
+      Checked = True
+      TabOrder = 8
+      TabStop = True
+      OnClick = rbFisicaClick
+    end
+    object rbJuridica: TRadioButton
+      Left = 82
+      Top = 73
+      Width = 60
+      Height = 17
+      Caption = 'Jur'#237'dica'
+      TabOrder = 9
+      OnClick = rbJuridicaClick
     end
   end
 end
