@@ -68,9 +68,8 @@ object FormCliente: TFormCliente
       Font.Style = []
       ParentFont = False
       OnClick = sbCancelarClick
-      ExplicitLeft = 56
-      ExplicitTop = 184
-      ExplicitWidth = 23
+      ExplicitLeft = 2
+      ExplicitTop = 17
     end
     object sbExcluir: TSpeedButton
       Left = 1
@@ -86,9 +85,8 @@ object FormCliente: TFormCliente
       Font.Style = []
       ParentFont = False
       OnClick = sbExcluirClick
-      ExplicitLeft = 80
-      ExplicitTop = 176
-      ExplicitWidth = 23
+      ExplicitLeft = 2
+      ExplicitTop = 51
     end
     object sbPesquisar: TSpeedButton
       Left = 1
@@ -97,6 +95,7 @@ object FormCliente: TFormCliente
       Height = 25
       Anchors = [akLeft, akRight]
       Caption = 'Pesquisar'
+      Visible = False
       ExplicitTop = 232
       ExplicitWidth = 128
     end
@@ -128,7 +127,7 @@ object FormCliente: TFormCliente
       Top = 102
       Width = 565
       Height = 406
-      ActivePage = tsPrincipal
+      ActivePage = tsEndereco
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       object tsPrincipal: TTabSheet
@@ -245,7 +244,7 @@ object FormCliente: TFormCliente
       Left = 6
       Top = 27
       Width = 76
-      Height = 22
+      Height = 23
       EditLabel.Width = 39
       EditLabel.Height = 15
       EditLabel.Caption = 'C'#243'digo'
@@ -312,6 +311,7 @@ object FormCliente: TFormCliente
       MaxLength = 10
       TabOrder = 6
       Text = '  /  /    '
+      OnExit = leDataNascimentoExit
     end
     object rgTipoCliente: TRadioGroup
       Left = 6

@@ -49,6 +49,7 @@ type
     procedure sbSalvarClick(Sender: TObject);
     procedure rbFisicaClick(Sender: TObject);
     procedure rbJuridicaClick(Sender: TObject);
+    procedure leDataNascimentoExit(Sender: TObject);
   private
     { Private declarations }
     procedure Biblioteca( Value: Boolean);
@@ -162,6 +163,14 @@ begin
     finally
       cliente.Free;
     end;
+  end;
+end;
+
+procedure TFormCliente.leDataNascimentoExit(Sender: TObject);
+var data:TDateTime;
+begin
+  if not TryStrToDate(leDataNascimento.Text,data) then begin
+    ShowMessage('Data Inválida');
   end;
 end;
 
