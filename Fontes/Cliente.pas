@@ -38,6 +38,7 @@ type
     rgTipoCliente: TRadioGroup;
     rbFisica: TRadioButton;
     rbJuridica: TRadioButton;
+    plBuscarPagamentoPadrao: TPanel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -50,6 +51,8 @@ type
     procedure rbFisicaClick(Sender: TObject);
     procedure rbJuridicaClick(Sender: TObject);
     procedure leDataNascimentoExit(Sender: TObject);
+    procedure leEmailExit(Sender: TObject);
+    procedure sbPesquisarClick(Sender: TObject);
   private
     { Private declarations }
     procedure Biblioteca( Value: Boolean);
@@ -62,7 +65,7 @@ var
 
 implementation
 
-uses _Cliente;
+uses _Cliente,PesquisarClientes;
 
 {$R *.dfm}
 
@@ -174,6 +177,17 @@ begin
   end;
 end;
 
+procedure TFormCliente.leEmailExit(Sender: TObject);
+const emailregex = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$';
+begin
+  if not TRegEx.IsMatch(leEmail.Text,emailregex,[roIgnoreCase]) then begin
+    ShowMessage('Email invalido.');
+
+    if leEmail.CanFocus then
+    leEmail.SetFocus;
+  end;
+end;
+
 procedure TFormCliente.rbFisicaClick(Sender: TObject);
 begin
   leCPF.EditMask:='000.000.000-00;0;_';
@@ -270,6 +284,18 @@ procedure TFormCliente.sbFecharClick(Sender: TObject);
 begin
   Close;
 end;
+procedure TFormCliente.sbPesquisarClick(Sender: TObject);
+var pesquisar:TFormPesquisarClientes;
+begin
+  pesquisar := TFormPesquisarClientes.Create(nil);
+  try
+    pesquisar.ShowModal;
+  finally
+    pesquisar.Release;
+  end;
+
+end;
+
 {$ENDREGION}
 
 {$REGION '___Botões Salvar___'}

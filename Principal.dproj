@@ -139,6 +139,10 @@
             <Form>FormCliente</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Fontes\PesquisarClientes.pas">
+            <Form>FormPesquisarClientes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

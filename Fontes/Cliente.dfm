@@ -95,7 +95,7 @@ object FormCliente: TFormCliente
       Height = 25
       Anchors = [akLeft, akRight]
       Caption = 'Pesquisar'
-      Visible = False
+      OnClick = sbPesquisarClick
       ExplicitTop = 232
       ExplicitWidth = 128
     end
@@ -127,7 +127,7 @@ object FormCliente: TFormCliente
       Top = 102
       Width = 565
       Height = 406
-      ActivePage = tsEndereco
+      ActivePage = tsPrincipal
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       object tsPrincipal: TTabSheet
@@ -153,18 +153,19 @@ object FormCliente: TFormCliente
           EditLabel.Caption = 'E-mail'
           TabOrder = 1
           Text = ''
+          OnExit = leEmailExit
         end
         object leLimiteCredito: TLabeledEdit
           Left = 11
           Top = 73
-          Width = 101
+          Width = 98
           Height = 23
           EditLabel.Width = 91
           EditLabel.Height = 15
           EditLabel.Caption = 'Limite de Cr'#233'dito'
-          NumbersOnly = True
           TabOrder = 2
           Text = ''
+          TextHint = '0'
         end
         object leFormaPagamentoPadrao: TLabeledEdit
           Left = 128
@@ -176,6 +177,18 @@ object FormCliente: TFormCliente
           EditLabel.Caption = 'Forma de pagamento Padr'#227'o'
           TabOrder = 3
           Text = ''
+        end
+        object plBuscarPagamentoPadrao: TPanel
+          Left = 314
+          Top = 71
+          Width = 42
+          Height = 25
+          Cursor = crHandPoint
+          Caption = '+'
+          Color = clGreen
+          ParentBackground = False
+          TabOrder = 4
+          Visible = False
         end
       end
       object tsEndereco: TTabSheet
@@ -242,7 +255,7 @@ object FormCliente: TFormCliente
     end
     object leCodigo: TLabeledEdit
       Left = 6
-      Top = 27
+      Top = 25
       Width = 76
       Height = 23
       EditLabel.Width = 39
@@ -251,6 +264,7 @@ object FormCliente: TFormCliente
       NumbersOnly = True
       TabOrder = 1
       Text = ''
+      TextHint = '0'
       OnKeyDown = leCodigoKeyDown
     end
     object leNome: TLabeledEdit
