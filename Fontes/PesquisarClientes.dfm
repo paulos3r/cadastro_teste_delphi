@@ -11,7 +11,6 @@ object FormPesquisarClientes: TFormPesquisarClientes
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OnCreate = FormCreate
   TextHeight = 15
   object plTop: TPanel
     Left = 0
@@ -35,8 +34,10 @@ object FormPesquisarClientes: TFormPesquisarClientes
       EditLabel.Width = 35
       EditLabel.Height = 15
       EditLabel.Caption = 'Buscar'
+      MaxLength = 100
       TabOrder = 0
       Text = ''
+      OnEnter = leBuscarEnter
       OnKeyDown = leBuscarKeyDown
     end
     object cbBuscarPor: TComboBox
@@ -46,7 +47,6 @@ object FormPesquisarClientes: TFormPesquisarClientes
       Height = 23
       TabOrder = 1
       TextHint = 'SELECIONE'
-      OnSelect = cbBuscarPorSelect
       Items.Strings = (
         'Nome'
         'ID')
@@ -59,17 +59,41 @@ object FormPesquisarClientes: TFormPesquisarClientes
     Height = 328
     Align = alClient
     TabOrder = 1
-    object sgBuscarPor: TStringGrid
+    object grdPesquisarCliente: TDBGrid
       Left = 1
       Top = 1
       Width = 622
       Height = 326
       Align = alClient
-      FixedCols = 2
-      RowCount = 2
+      DataSource = DataSourcePesquisarClientes
       TabOrder = 0
-      ExplicitLeft = 2
-      ExplicitTop = 6
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -12
+      TitleFont.Name = 'Segoe UI'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          Title.Caption = 'Nome'
+          Visible = True
+        end
+        item
+          Alignment = taRightJustify
+          Expanded = False
+          Title.Caption = 'CGC'
+          Visible = True
+        end
+        item
+          Alignment = taRightJustify
+          Expanded = False
+          Title.Caption = 'Ativo'
+          Visible = True
+        end>
     end
+  end
+  object DataSourcePesquisarClientes: TDataSource
+    Left = 520
+    Top = 72
   end
 end

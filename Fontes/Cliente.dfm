@@ -140,6 +140,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 44
           EditLabel.Height = 15
           EditLabel.Caption = 'Telefone'
+          MaxLength = 20
           TabOrder = 0
           Text = ''
         end
@@ -151,6 +152,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 34
           EditLabel.Height = 15
           EditLabel.Caption = 'E-mail'
+          MaxLength = 100
           TabOrder = 1
           Text = ''
           OnExit = leEmailExit
@@ -175,6 +177,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 154
           EditLabel.Height = 15
           EditLabel.Caption = 'Forma de pagamento Padr'#227'o'
+          MaxLength = 50
           TabOrder = 3
           Text = ''
         end
@@ -202,6 +205,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 49
           EditLabel.Height = 15
           EditLabel.Caption = 'Endere'#231'o'
+          MaxLength = 100
           TabOrder = 0
           Text = ''
         end
@@ -213,6 +217,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 31
           EditLabel.Height = 15
           EditLabel.Caption = 'Bairro'
+          MaxLength = 50
           TabOrder = 1
           Text = ''
         end
@@ -224,6 +229,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 37
           EditLabel.Height = 15
           EditLabel.Caption = 'Cidade'
+          MaxLength = 30
           TabOrder = 2
           Text = ''
         end
@@ -235,6 +241,7 @@ object FormCliente: TFormCliente
           EditLabel.Width = 14
           EditLabel.Height = 15
           EditLabel.Caption = 'UF'
+          MaxLength = 2
           TabOrder = 3
           Text = ''
         end
@@ -261,6 +268,7 @@ object FormCliente: TFormCliente
       EditLabel.Width = 39
       EditLabel.Height = 15
       EditLabel.Caption = 'C'#243'digo'
+      MaxLength = 10
       NumbersOnly = True
       TabOrder = 1
       Text = ''
@@ -275,6 +283,7 @@ object FormCliente: TFormCliente
       EditLabel.Width = 33
       EditLabel.Height = 15
       EditLabel.Caption = 'Nome'
+      MaxLength = 100
       TabOrder = 2
       Text = ''
     end
@@ -310,6 +319,7 @@ object FormCliente: TFormCliente
       EditLabel.Width = 21
       EditLabel.Height = 15
       EditLabel.Caption = 'CPF'
+      MaxLength = 17
       TabOrder = 5
       Text = ''
     end

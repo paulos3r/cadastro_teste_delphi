@@ -1,7 +1,7 @@
 unit _Cliente;
 
 interface
-uses System.SysUtils, system.Generics.Collections;
+uses System.SysUtils, system.Generics.Collections,ZDataset;
 type
   TCliente = class
   private
@@ -62,13 +62,13 @@ type
     procedure Atualizar(AId:Integer);
     procedure Excluir;
 
-    function Buscar():TObjectList<TCliente>;
+    function Buscar():TZQuery;
     function BuscarPorId(const Value:Integer):TCliente;
   end;
 
 implementation
 
-uses _ConexaoBancoDeDados, ZDataset, ZConnection;
+uses _ConexaoBancoDeDados, ZConnection;
 
 { TCliente }
 
@@ -272,54 +272,32 @@ begin
 end;
 
 
-function TCliente.Buscar: TObjectList<TCliente>;
+function TCliente.Buscar:TZQuery;
 var
   qry: TZQuery;
   cliente:TCliente;
 begin
-  Result := TObjectList<TCliente>.Create(True);
   qry := TZQuery.Create(nil);
   qry.Connection := dmConexaoOracle.zConexao;
 
-  try
     qry.SQL.Text :=
         'select CLIENTE_ID, NOME, DATA_NASCIMENTO, STATUS, CPF_CNPJ, ' +
         'TELEFONE, EMAIL, DATA_CADASTRO, LIMITE, ' +
         'ENDERECO, BAIRRO, CIDADE, UF, CEP ' +
-        'from CLIENTES';
+        'from CLIENTES ' +
+        'where (CLIENTE_ID = :ID) or (NOME like :NOME)';
+    qry.ParamByName('ID').AsInteger := FCliente_id;
+    qry.ParamByName('NOME').AsString := '%' + FNome + '%';
+
     try
       qry.Open;
-
-      while not qry.Eof do begin
-        cliente := TCliente.Create;
-
-        cliente.FCliente_id      := qry.FieldByName('CLIENTE_ID').AsInteger;
-        cliente.FNome           := qry.FieldByName('NOME').AsString;
-        cliente.FData_nascimento := qry.FieldByName('DATA_NASCIMENTO').AsDateTime;
-        cliente.FStatus         := qry.FieldByName('STATUS').AsString;
-        cliente.FCpf_cnpj        := qry.FieldByName('CPF_CNPJ').AsString;
-        cliente.FTelefone       := qry.FieldByName('TELEFONE').AsString;
-        cliente.FEmail          := qry.FieldByName('EMAIL').AsString;
-        cliente.FData_cadastro   := qry.FieldByName('DATA_CADASTRO').AsDateTime;
-        cliente.FLimite         := qry.FieldByName('LIMITE').AsCurrency;
-        cliente.FEndereco       := qry.FieldByName('ENDERECO').AsString;
-        cliente.FBairro         := qry.FieldByName('BAIRRO').AsString;
-        cliente.FCidade         := qry.FieldByName('CIDADE').AsString;
-        cliente.FUf             := qry.FieldByName('UF').AsString;
-        cliente.FCep            := qry.FieldByName('CEP').AsString;
-
-        Result.Add(cliente);
-
-        qry.Next;
-      end;
-
+      Result := qry;
     except
-      Result.free;
-      raise;
+      on E:Exception do begin
+        qry.Free;
+        raise Exception.Create('Error ao buscar o cleinte ' + e.Message);
+      end;
     end;
-  finally
-    qry.Free;
-  end;
 end;
 
 function TCliente.BuscarPorId(const Value: Integer): TCliente;
