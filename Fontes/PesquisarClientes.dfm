@@ -59,37 +59,17 @@ object FormPesquisarClientes: TFormPesquisarClientes
     Height = 328
     Align = alClient
     TabOrder = 1
-    object grdPesquisarCliente: TDBGrid
+    object sgPesquisarClientes: TStringGrid
       Left = 1
       Top = 1
       Width = 622
       Height = 326
       Align = alClient
-      DataSource = DataSourcePesquisarClientes
       TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -12
-      TitleFont.Name = 'Segoe UI'
-      TitleFont.Style = []
-      Columns = <
-        item
-          Expanded = False
-          Title.Caption = 'Nome'
-          Visible = True
-        end
-        item
-          Alignment = taRightJustify
-          Expanded = False
-          Title.Caption = 'CGC'
-          Visible = True
-        end
-        item
-          Alignment = taRightJustify
-          Expanded = False
-          Title.Caption = 'Ativo'
-          Visible = True
-        end>
+      ExplicitLeft = 0
+      ExplicitTop = 6
+      ExplicitWidth = 512
+      ExplicitHeight = 202
     end
   end
   object DataSourcePesquisarClientes: TDataSource

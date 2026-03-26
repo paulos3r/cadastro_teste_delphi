@@ -6,13 +6,13 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.MaskUtils,
   Vcl.Graphics,Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls,
   System.Win.TaskbarCore, Vcl.Taskbar, Vcl.Menus, Vcl.StdCtrls, Vcl.Mask,
-  Vcl.ComCtrls,System.RegularExpressions;
+  Vcl.ComCtrls,System.RegularExpressions, Winapi.ShlObj, StrUtils ;
 
 type
   TFormCliente = class(TForm)
     plBotoesDeAcao: TPanel;
     plPrincipal: TPanel;
-    sbSalvar: TSpeedButton;
+    sbGravar: TSpeedButton;
     sbCancelar: TSpeedButton;
     sbExcluir: TSpeedButton;
     sbPesquisar: TSpeedButton;
@@ -47,7 +47,7 @@ type
     procedure sbCancelarClick(Sender: TObject);
     procedure sbFecharClick(Sender: TObject);
     procedure sbExcluirClick(Sender: TObject);
-    procedure sbSalvarClick(Sender: TObject);
+    procedure sbGravarClick(Sender: TObject);
     procedure rbFisicaClick(Sender: TObject);
     procedure rbJuridicaClick(Sender: TObject);
     procedure leDataNascimentoExit(Sender: TObject);
@@ -68,8 +68,6 @@ implementation
 uses _Cliente,PesquisarClientes;
 
 {$R *.dfm}
-
-{$REGION '___EVENTOS___'}
 
 procedure TFormCliente.FormCreate(Sender: TObject);
 begin
@@ -119,34 +117,15 @@ begin
 
       if Assigned(Cliente) then begin
         leNome.Text := cliente.nome;
-        cbAtivo.Checked := cliente.status = 'ATIVO';
-        // MASCARA PARA O CNPJ E CPF
-        if Length(cliente.cpf_cnpj)=11 then begin
-          mascara_cpf_cnpj:='000.000.000-00;0;_';
-          leCPF.EditLabel.Caption:='CPF';
-          rbFisica.Checked:=true;
-        end
-        else if Length(cliente.cpf_cnpj)=14 then begin
-          mascara_cpf_cnpj:='00.000.000/0000-00;0;_';
-          leCPF.EditLabel.Caption:='CNPJ';
-          rbJuridica.Checked:=true;
-        end
-        else
-          mascara_cpf_cnpj:='';
-        leCPF.EditMask := mascara_cpf_cnpj;
-        leCPF.Text := cliente.cpf_cnpj;
+        cbAtivo.Checked := cliente.status='ATIVO';
+
+        rbFisica.Checked :=Length(cliente.cpf_cnpj)=14;
+
+        rbJuridica.Checked := Length(cliente.cpf_cnpj)=18;
 
         leDataNascimento.Text := DateToStr(cliente.data_nascimento);
         leDataCadastro.Text := DateToStr(cliente.data_cadastro);
-            // MASCARA PARA O TELEFONE
-        if Length(cliente.telefone) = 11 then
-          mascara_telefone := '(00)00000-0000;0;_'
-        else if  Length(cliente.telefone) = 10 then
-          mascara_telefone := '(00)0000-0000;0;_'
-        else
-          mascara_telefone:='';
 
-        leTelefone.EditMask := mascara_telefone;
         leTelefone.Text := cliente.telefone;
         leEmail.Text:=cliente.email;
         leLimiteCredito.Text:= FloatToStr(cliente.limite);
@@ -198,12 +177,6 @@ begin
   leCPF.EditMask:='00.000.000/0000-00;0;_';
 end;
 
-{$ENDREGION}
-
-
-{$REGION '___Procedures___'}
-
-
 procedure TFormCliente.Biblioteca(Value:Boolean);
 var componente: TComponent;
 i:Integer;
@@ -241,30 +214,25 @@ begin
   sbPesquisar.Enabled:=not Value;
   sbFechar.Enabled:=not Value;
 end;
-{$ENDREGION}
 
-
-{$REGION '___Botões Cancelar___'}
 procedure TFormCliente.sbCancelarClick(Sender: TObject);
 begin
   Biblioteca(false);
 end;
-{$ENDREGION}
 
-{$REGION '___Botões Excluir___'}
 procedure TFormCliente.sbExcluirClick(Sender: TObject);
 var cliente:TCliente;
   id:Integer;
 begin
   id:=0;
   if not TryStrToInt(leCodigo.Text, id) then begin
-    MessageDlg('Ocorreu um erro ao excluir esse Cliente favor verificar se possui um Identificador',
-                TMsgDlgType.mtError,[mbOk],0);
+    MessageDlg('Erro ao excluir o Cliente: ' + id.ToString,
+                TMsgDlgType.mtError, [mbOk], 0);
     exit;
   end;
 
   if id>0 then begin
-    if MessageDlg( 'Deseja excluir esse registro?',TMsgDlgType.mtConfirmation,mbYesNo,0) = mrYes then begin
+    if MessageDlg('Deseja excluir esse registro?', TMsgDlgType.mtConfirmation, mbYesNo, 0) = mrYes then begin
       cliente := TCliente.Create;
       cliente.codigo:= id;
       cliente.Excluir;
@@ -277,9 +245,7 @@ begin
   end;
 
 end;
-{$ENDREGION}
 
-{$REGION '___Botões Fechar___'}
 procedure TFormCliente.sbFecharClick(Sender: TObject);
 begin
   Close;
@@ -296,10 +262,8 @@ begin
 
 end;
 
-{$ENDREGION}
 
-{$REGION '___Botões Salvar___'}
-procedure TFormCliente.sbSalvarClick(Sender: TObject);
+procedure TFormCliente.sbGravarClick(Sender: TObject);
 var cliente: TCliente;
 codigo:Integer;
 existe:Boolean;
@@ -313,31 +277,24 @@ begin
 
 
   cliente := TCliente.Create;
-
   try
-    if codigo>0 then cliente.codigo:= codigo;
-    cliente.nome:=leNome.Text;
-    if cbAtivo.Checked then
-      cliente.status:='ATIVO'
-    else
-      cliente.status:='INATIVO';
+      cliente.codigo := codigo;
+      cliente.nome := leNome.Text;
+      cliente.data_nascimento := StrToDate(leDataNascimento.Text);
+      cliente.status := ifthen( cbAtivo.Checked=true, 'ATIVO', 'INATIVO');
+      cliente.cpf_cnpj := leCPF.Text;
 
-    cliente.cpf_cnpj:= TRegEx.Replace(leCPF.Text, '[^0-9]', '');
+      cliente.telefone := leTelefone.Text;
+      cliente.email := leEmail.Text;
+      cliente.data_cadastro := StrToDate(leDataCadastro.Text);
+      cliente.limite := StrToFloat(leLimiteCredito.Text);
+      cliente.forma_pagamento := leFormaPagamentoPadrao.Text;
 
-    cliente.data_nascimento:= StrToDate(leDataNascimento.Text);
-    cliente.data_cadastro:= StrToDate(leDataCadastro.Text);
-    cliente.telefone:= TRegEx.Replace(leTelefone.Text, '[^0-9]', '');
-    cliente.email:= leEmail.Text;
-    cliente.limite:= StrToFloat(leLimiteCredito.Text);
-    cliente.forma_pagamento:= leFormaPagamentoPadrao.Text;
-
-    cliente.endereco:= leEndereco.Text;
-    cliente.bairro:= leBairro.Text;
-    cliente.cidade:=leCidade.Text;
-    cliente.uf:= leUf.Text;
-    cliente.cep:= leCep.Text;
-
-
+      cliente.endereco := leEndereco.Text;
+      cliente.bairro := leBairro.Text;
+      cliente.cidade := leCidade.Text;
+      cliente.uf := leUf.Text;
+      cliente.cep := leCep.Text;
 
     if codigo>0 then begin
       try
@@ -365,7 +322,5 @@ begin
     cliente.Free;
     Biblioteca(false);
   end;
-
 end;
-{$ENDREGION}
 end.

@@ -3,7 +3,7 @@ create table CLIENTES (
   NOME            varchar2(100) not null,
   DATA_NASCIMENTO date,
   STATUS          varchar(10) default 'ATIVO' not null,
-  CPF_CNPJ        varchar2(14),
+  CPF_CNPJ        varchar2(18),
   
   TELEFONE      varchar2(16),
   EMAIL         varchar2(50),

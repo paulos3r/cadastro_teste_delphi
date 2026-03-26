@@ -3,7 +3,7 @@ unit PesquisarClientes;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, system.Generics.Collections, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls,
   Vcl.Grids, Data.DB, Vcl.DBGrids, ZAbstractRODataset, ZAbstractDataset,
   ZDataset;
@@ -15,8 +15,8 @@ type
     leBuscar: TLabeledEdit;
     cbBuscarPor: TComboBox;
     lbBuscarPor: TLabel;
-    grdPesquisarCliente: TDBGrid;
     DataSourcePesquisarClientes: TDataSource;
+    sgPesquisarClientes: TStringGrid;
     procedure leBuscarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure leBuscarEnter(Sender: TObject);
@@ -45,31 +45,35 @@ end;
 
 procedure TFormPesquisarClientes.leBuscarKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-var cliente:TCliente;
-  i:Integer;
+var
+  lista: TObjectList<TCliente>;
+  i: Integer;
 begin
   if Key = VK_RETURN then begin
     Key :=0;
-
-    cliente := TCliente.Create;
-
-    if (cbBuscarPor.ItemIndex = 1) and ( not TryStrToInt(leBuscar.Text,i)) then begin
-      ShowMessage('ID esse campo aceita somente numeros!');
-      Exit;
-    end
-    else if cbBuscarPor.ItemIndex = 1 then
-      cliente.codigo:= StrToInt( leBuscar.Text )
-    else
-      cliente.nome:= leBuscar.Text;
-
+    lista:=nil;
     try
-      DataSourcePesquisarClientes.DataSet := cliente.Buscar;
-      grdPesquisarCliente.DataSource := DataSourcePesquisarClientes;
-      grdPesquisarCliente.Refresh;
-    except on e:Exception do
-      ShowMessage('Erro ao buscar o cliente: ' + e.Message)
+      lista := TCliente.BuscarClientes(leBuscar.Text);
+
+      sgPesquisarClientes.RowCount := lista.count+1;
+
+      sgPesquisarClientes.Cells[0,0] := 'ID';
+      sgPesquisarClientes.Cells[1,0] := 'Nome';
+      sgPesquisarClientes.Cells[2,0] := 'CGC';
+
+      for i := 0 to lista.Count-1 do begin
+        sgPesquisarClientes.Cells[0,i+1] := IntToStr(lista[i].codigo);
+        sgPesquisarClientes.Cells[1,i+1] := lista[i].nome;
+        sgPesquisarClientes.Cells[2,i+1] := lista[i].cpf_cnpj;
+      end;
+
+    finally
+      lista.Free;
     end;
+
   end;
+
 end;
+
 
 end.

@@ -36,7 +36,7 @@ object FormCliente: TFormCliente
     DesignSize = (
       139
       509)
-    object sbSalvar: TSpeedButton
+    object sbGravar: TSpeedButton
       Left = 1
       Top = 1
       Width = 137
@@ -49,7 +49,7 @@ object FormCliente: TFormCliente
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      OnClick = sbSalvarClick
+      OnClick = sbGravarClick
       ExplicitLeft = 48
       ExplicitTop = 16
       ExplicitWidth = 23

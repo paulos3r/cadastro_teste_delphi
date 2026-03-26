@@ -1,7 +1,7 @@
 unit _Cliente;
 
 interface
-uses System.SysUtils, system.Generics.Collections,ZDataset;
+uses System.SysUtils, system.Generics.Collections,system.Classes, ZDataset;
 type
   TCliente = class
   private
@@ -23,47 +23,35 @@ type
     FUf:string;
     FCep:string;
 
-    procedure SetNome(const Value:string);
-    procedure SetData_nascimento(const Value:TDateTime);
-    procedure SetBairro(const Value: string);
-    procedure SetCep(const Value: string);
-    procedure SetCidade(const Value: string);
-    procedure SetCpf_cnpj(const Value: string);
-    procedure SetEmail(const Value: string);
-    procedure SetEndereco(const Value: string);
-    procedure SetLimite(const Value: Double);
-    procedure SetStatus(const Value: string);
-    procedure SetTelefone(const Value: string);
-    procedure SetUf(const Value: string);
-    procedure SetCliente_id(const Value: Integer);
-
   public
     constructor Create;
 
-    property codigo:Integer read FCliente_id write SetCliente_id;
-    property nome:string read FNome write SetNome;
-    property data_nascimento:TDateTime read FData_nascimento write SetData_nascimento;
-    property status:string read FStatus write SetStatus;
-    property cpf_cnpj:string read FCpf_cnpj write SetCpf_cnpj;
+    property codigo:Integer read FCliente_id write FCliente_id;
+    property nome:string read FNome write FNome;
+    property data_nascimento:TDateTime read FData_nascimento write FData_nascimento;
+    property status:string read FStatus write FStatus;
+    property cpf_cnpj:string read FCpf_cnpj write FCpf_cnpj;
 
-    property telefone:string read FTelefone write SetTelefone;
-    property email:string read FEmail write SetEmail;
+    property telefone:string read FTelefone write FTelefone;
+    property email:string read FEmail write FEmail;
     property data_cadastro:TDateTime read FData_cadastro write FData_cadastro ;
-    property limite:Double read FLimite write SetLimite;
+    property limite:Double read FLimite write FLimite;
     property forma_pagamento:string read FFormaPamento write FFormaPamento;
 
-    property endereco:string read FEndereco write SetEndereco;
-    property bairro:string read FBairro write SetBairro;
-    property cidade:string read FCidade write SetCidade;
-    property uf:string read FUf write SetUf;
-    property cep:string read FCep write SetCep;
+    property endereco:string read FEndereco write FEndereco;
+    property bairro:string read FBairro write FBairro;
+    property cidade:string read FCidade write FCidade;
+    property uf:string read FUf write FUf;
+    property cep:string read FCep write FCep;
 
     procedure Cadastrar;
     procedure Atualizar(AId:Integer);
     procedure Excluir;
+    procedure MapearParametros(qry:TZQuery);
 
     function Buscar():TZQuery;
     function BuscarPorId(const Value:Integer):TCliente;
+    class function BuscarClientes(nome_cgc:string):TObjectList<TCliente>;
   end;
 
 implementation
@@ -72,138 +60,10 @@ uses _ConexaoBancoDeDados, ZConnection;
 
 { TCliente }
 
-{$REGION '___ CREATE E DESTRUCTOR ___'}
-
 
 constructor TCliente.Create;
 begin
 end;
-
-{$ENDREGION}
-
-
-{$REGION '_______ Set ________'}
-
-{
-  usando para informar os dados para o cadastros e edição sem precisar
-  expondo a regra de negocio na tela evitando erros e tratamento de regra na tela
-}
-
-procedure TCliente.SetNome(const Value: string);
-begin
-  if Value.Trim.IsEmpty then
-    raise Exception.Create('O nome não pode ser vazio');
-  if Value.Trim.Length > 100 then
-    raise Exception.Create(
-      Format(
-      'Nome deve conter até 100 caracteres e foi informado %d caracteres.',
-      [Value.Trim.Length]
-  ));
-
-  FNome:= Value;
-end;
-
-procedure TCliente.SetBairro(const Value: string);
-begin
-  if Value.Trim.IsEmpty then
-    raise Exception.Create('O nome do bairro não pode ser vazio!');
-
-  FBairro := Value;
-end;
-
-procedure TCliente.SetCep(const Value: string);
-begin
-  if Value.Length <> 9 then
-    raise Exception.Create('CEP inválido: ' +Value + ', deve ser informado #####-###' );
-
-  FCep := Value;
-end;
-
-procedure TCliente.SetCidade(const Value: string);
-begin
-  if Value.Trim.IsEmpty then
-    raise Exception.Create('Cidade não pode ser vazio');
-
-  FCidade := Value;
-end;
-
-procedure TCliente.SetCliente_id(const Value: Integer);
-begin
-  if Value<=0 then
-    raise Exception.Create('O Código do cadastro deve ser maior que 0.');
-
-  FCliente_id := Value;
-end;
-
-procedure TCliente.SetCpf_cnpj(const Value: string);
-begin
-  if Value.Trim.IsEmpty then
-    raise Exception.Create('CPF / CNPJ não pode ser vazio');
-
-  FCpf_cnpj := Value;
-end;
-
-procedure TCliente.SetStatus(const Value: string);
-begin
-  if (Value.Trim<>'ATIVO') and (Value.Trim<>'INATIVO') and Value.Trim.IsEmpty  then
-    raise Exception.Create('Status do cliente e inválido');
-
-  FStatus := Value;
-end;
-
-procedure TCliente.SetTelefone(const Value: string);
-begin
-  if Value.Trim.IsEmpty then
-    raise Exception.Create('Campo de telefone não pode ser vazio');
-  if Value.Length <= 7 then
-    raise Exception.Create('Campo de telefone deve ter mais de 8 digitos');
-
-  FTelefone := Value;
-end;
-
-procedure TCliente.SetUf(const Value: string);
-begin
-  FUf := Value;
-end;
-
-procedure TCliente.SetData_nascimento(const Value: TDateTime);
-begin
-  if Value > now then
-    raise Exception.Create('Data de nascimento não pode ser futura');
-  if Value <= 0 then
-    raise Exception.Create('Data de nascimento e inválida');
-
-  FData_nascimento := Value;
-end;
-
-procedure TCliente.SetEmail(const Value: string);
-begin
-  if (pos('@', Value )<=0) and (pos('.', Value)<=0) then
-    raise Exception.Create('Email inválido');
-
-  FEmail := Value;
-end;
-
-procedure TCliente.SetEndereco(const Value: string);
-begin
-  if Value.Trim.IsEmpty then
-    raise Exception.Create('Endereco de email não pode ser vazio');
-
-  FEndereco := Value;
-end;
-
-procedure TCliente.SetLimite(const Value: Double);
-begin
-  if Value<0 then
-    raise Exception.Create('Não é póssivel inserir valor negativo em limiete');
-
-  FLimite := Value;
-end;
-
-{$ENDREGION}
-
-
-{$REGION '____ PROCEDURES E FUNCTIONS ____ '}
 
 procedure TCliente.Atualizar;
 var
@@ -298,6 +158,43 @@ begin
         raise Exception.Create('Error ao buscar o cleinte ' + e.Message);
       end;
     end;
+end;
+
+class function TCliente.BuscarClientes(nome_cgc:string): TObjectList<TCliente>;
+var
+  qry:TZQuery;
+  cliente: TCliente;
+begin
+
+  Result:= TObjectList<TCliente>.Create;
+
+  qry:= TZQuery.Create(nil);
+
+  try
+    qry.Connection := dmConexaoOracle.zConexao;
+    qry.SQL.Text := 'select CLIENTE_ID,NOME,CPF_CNPJ from CLIENTES where CPF_CNPJ like :CPF_CNPJ or NOME like :NOME';
+
+    qry.ParamByName('CPF_CNPJ').AsString := '%' + nome_cgc + '%';
+    qry.ParamByName('NOME').AsString := '%' + nome_cgc + '%';
+
+    qry.Open;
+
+    while not qry.Eof do begin
+
+      cliente:= TCliente.Create;
+
+      cliente.FCliente_id:= qry.FieldByName('CLIENTE_ID').AsInteger;
+      cliente.nome:=qry.FieldByName('NOME').AsString;
+      cliente.cpf_cnpj:=qry.FieldByName('CPF_CNPJ').AsString;
+
+      Result.Add(cliente);
+
+      qry.Next;
+    end;
+
+  finally
+    qry.Free;
+  end;
 end;
 
 function TCliente.BuscarPorId(const Value: Integer): TCliente;
@@ -433,6 +330,23 @@ begin
     qry.Free;
   end;
 end;
+procedure TCliente.MapearParametros(qry:TZQuery);
+begin
+  qry.ParamByName('NOME').AsString              := FNome;
+  qry.ParamByName('DATA_NASCIMENTO').AsDateTime := FData_nascimento;
+  qry.ParamByName('STATUS').AsString            := FStatus;
+  qry.ParamByName('CPF_CNPJ').AsString          := FCpf_cnpj;
 
-{$ENDREGION}
+  qry.ParamByName('TELEFONE').AsString        := FTelefone;
+  qry.ParamByName('EMAIL').AsString           := FEmail;
+  qry.ParamByName('DATA_CADASTRO').AsDateTime := FData_cadastro;
+  qry.ParamByName('LIMITE').AsCurrency        := FLimite;
+
+  qry.ParamByName('ENDERECO').AsString := FEndereco;
+  qry.ParamByName('BAIRRO').AsString   := FBairro;
+  qry.ParamByName('CIDADE').AsString   := FCidade;
+  qry.ParamByName('UF').AsString       := FUf;
+  qry.ParamByName('CEP').AsString      := FCep;
+end;
+
 end.
