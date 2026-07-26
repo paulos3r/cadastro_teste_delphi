@@ -7,7 +7,8 @@ uses
 
 type
   TdmConexaoOracle = class(TDataModule)
-  zConexao: TZConnection;
+    zConexaoO: TZConnection;
+    zConexao: TZConnection;
   procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -30,7 +31,7 @@ implementation
 procedure TdmConexaoOracle.DataModuleCreate(Sender: TObject);
 var caminho_path_oci,senha, usuario, base, host:string;
 begin
-  caminho_path_oci:= IncludeTrailingPathDelimiter( ExtractFilePath( Application.ExeName ) ) +'lib\old\oci.dll';
+ { caminho_path_oci:= 'C:\oracle\instantclient_21_20\oci.dll'; // IncludeTrailingPathDelimiter( ExtractFilePath( Application.ExeName ) ) +'lib\old\oci.dll';
 
   if not FileExists(caminho_path_oci) then
     raise Exception.Create('Oci.dll não foi encontrada no local: ' + caminho_path_oci);
@@ -52,7 +53,6 @@ begin
     Connected:=false;
     LoginPrompt:=false;
 
-
     Protocol := 'oracle';
     Port:=1521;
     LibraryLocation:= caminho_path_oci;
@@ -60,7 +60,7 @@ begin
     HostName:= host;
     User:= usuario;
     Password:= senha;
-  end;
+  end;    }
 
 end;
 

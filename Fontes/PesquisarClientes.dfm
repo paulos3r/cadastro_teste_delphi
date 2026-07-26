@@ -66,10 +66,7 @@ object FormPesquisarClientes: TFormPesquisarClientes
       Height = 326
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 0
-      ExplicitTop = 6
-      ExplicitWidth = 512
-      ExplicitHeight = 202
+      OnDblClick = sgPesquisarClientesDblClick
     end
   end
   object DataSourcePesquisarClientes: TDataSource

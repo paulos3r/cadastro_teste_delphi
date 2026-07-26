@@ -69,7 +69,7 @@ object FormCliente: TFormCliente
       ParentFont = False
       OnClick = sbCancelarClick
       ExplicitLeft = 2
-      ExplicitTop = 17
+      ExplicitTop = 26
     end
     object sbExcluir: TSpeedButton
       Left = 1
@@ -90,14 +90,12 @@ object FormCliente: TFormCliente
     end
     object sbPesquisar: TSpeedButton
       Left = 1
-      Top = 201
+      Top = 199
       Width = 138
       Height = 25
       Anchors = [akLeft, akRight]
       Caption = 'Pesquisar'
       OnClick = sbPesquisarClick
-      ExplicitTop = 232
-      ExplicitWidth = 128
     end
     object sbFechar: TSpeedButton
       Left = 1
@@ -127,7 +125,7 @@ object FormCliente: TFormCliente
       Top = 102
       Width = 565
       Height = 406
-      ActivePage = tsPrincipal
+      ActivePage = tsEndereco
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       object tsPrincipal: TTabSheet
@@ -155,6 +153,7 @@ object FormCliente: TFormCliente
           MaxLength = 100
           TabOrder = 1
           Text = ''
+          TextHint = 'email@host.com'
           OnExit = leEmailExit
         end
         object leLimiteCredito: TLabeledEdit
@@ -180,6 +179,7 @@ object FormCliente: TFormCliente
           MaxLength = 50
           TabOrder = 3
           Text = ''
+          TextHint = 'BOLETO'
         end
         object plBuscarPagamentoPadrao: TPanel
           Left = 314
@@ -276,8 +276,8 @@ object FormCliente: TFormCliente
       OnKeyDown = leCodigoKeyDown
     end
     object leNome: TLabeledEdit
-      Left = 92
-      Top = 27
+      Left = 88
+      Top = 25
       Width = 390
       Height = 23
       EditLabel.Width = 33
@@ -319,7 +319,7 @@ object FormCliente: TFormCliente
       EditLabel.Width = 21
       EditLabel.Height = 15
       EditLabel.Caption = 'CPF'
-      MaxLength = 17
+      MaxLength = 18
       TabOrder = 5
       Text = ''
     end
@@ -351,9 +351,7 @@ object FormCliente: TFormCliente
       Width = 63
       Height = 17
       Caption = 'F'#237'sica'
-      Checked = True
       TabOrder = 8
-      TabStop = True
       OnClick = rbFisicaClick
     end
     object rbJuridica: TRadioButton

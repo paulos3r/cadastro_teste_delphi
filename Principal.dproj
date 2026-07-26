@@ -143,6 +143,16 @@
             <Form>FormPesquisarClientes</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Fontes\Agendamento.pas">
+            <Form>FormAgendamento</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Fontes\RelacaoClientesAgendamentos.pas">
+            <Form>formRelacaoClientesAgendamentos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Banco\_Agendamento.pas"/>
+        <DCCReference Include="Banco\_Biblioteca.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

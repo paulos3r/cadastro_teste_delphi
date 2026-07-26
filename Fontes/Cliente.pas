@@ -99,9 +99,6 @@ begin
 
     if Trim(leCodigo.Text) = '' then  begin
       leDataCadastro.Text:= DateToStr(now);
-      leCPF.EditMask:='000.000.000-00;0;_';
-      leTelefone.EditMask:='(00)00000-0000;0;_';
-      leCep.EditMask:= '00000-000;1;_';
 
       sbExcluir.Enabled:=false;
       Exit;
@@ -125,6 +122,7 @@ begin
 
         leDataNascimento.Text := DateToStr(cliente.data_nascimento);
         leDataCadastro.Text := DateToStr(cliente.data_cadastro);
+        leCPF.Text := cliente.cpf_cnpj;
 
         leTelefone.Text := cliente.telefone;
         leEmail.Text:=cliente.email;
@@ -251,11 +249,47 @@ begin
   Close;
 end;
 procedure TFormCliente.sbPesquisarClick(Sender: TObject);
-var pesquisar:TFormPesquisarClientes;
+var pesquisar:TFormPesquisarClientes; cliente: TCliente;
 begin
   pesquisar := TFormPesquisarClientes.Create(nil);
   try
     pesquisar.ShowModal;
+
+    cliente := TCliente.Create;
+     try
+      cliente := cliente.BuscarPorId(pesquisar.id_selecionado);
+
+      if Assigned(Cliente) then begin
+        leNome.Text := cliente.nome;
+        cbAtivo.Checked := cliente.status='ATIVO';
+
+        rbFisica.Checked :=Length(cliente.cpf_cnpj)=14;
+
+        rbJuridica.Checked := Length(cliente.cpf_cnpj)=18;
+
+        leDataNascimento.Text := DateToStr(cliente.data_nascimento);
+        leDataCadastro.Text := DateToStr(cliente.data_cadastro);
+
+        leTelefone.Text := cliente.telefone;
+        leEmail.Text:=cliente.email;
+        leLimiteCredito.Text:= FloatToStr(cliente.limite);
+        leFormaPagamentoPadrao.Text:= 'PADRÃO - IMPLEMENTAR';
+
+        leEndereco.Text := cliente.endereco;
+        leBairro.Text:= cliente.bairro;
+        leCidade.Text:= cliente.cidade;
+        leUf.Text:= cliente.uf;
+        leCep.Text:= cliente.cep
+      end
+      else begin
+        ShowMessage('Cliente não encontrado.');
+        Biblioteca(false);
+        leCodigo.SetFocus;
+      end;
+    finally
+      cliente.Free;
+    end;
+
   finally
     pesquisar.Release;
   end;
@@ -282,9 +316,17 @@ begin
       cliente.nome := leNome.Text;
       cliente.data_nascimento := StrToDate(leDataNascimento.Text);
       cliente.status := ifthen( cbAtivo.Checked=true, 'ATIVO', 'INATIVO');
-      cliente.cpf_cnpj := leCPF.Text;
 
-      cliente.telefone := leTelefone.Text;
+      if rbFisica.Checked=true then
+        cliente.cpf_cnpj := FormatMaskText('000\.000\.000\-00;0;',leCPF.Text)
+      else
+        cliente.cpf_cnpj := FormatMaskText('00\.000\.000\/0000\-00;0;',leCPF.Text);
+
+      if Length(leTelefone.Text)<=10 then
+        cliente.telefone := FormatMaskText('\(00\)0000\-0000;0;', leTelefone.Text)
+      else
+        cliente.telefone := FormatMaskText('\(00\)00000\-0000;0;', leTelefone.Text);
+
       cliente.email := leEmail.Text;
       cliente.data_cadastro := StrToDate(leDataCadastro.Text);
       cliente.limite := StrToFloat(leLimiteCredito.Text);

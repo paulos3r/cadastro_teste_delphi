@@ -20,10 +20,12 @@ type
     procedure leBuscarKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure leBuscarEnter(Sender: TObject);
+    procedure sgPesquisarClientesDblClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    id_selecionado:Integer;
   end;
 
 var
@@ -55,6 +57,9 @@ begin
     try
       lista := TCliente.BuscarClientes(leBuscar.Text);
 
+      // se retornar nil
+      if not Assigned(lista) then Exit;
+
       sgPesquisarClientes.RowCount := lista.count+1;
 
       sgPesquisarClientes.Cells[0,0] := 'ID';
@@ -75,5 +80,18 @@ begin
 
 end;
 
+
+procedure TFormPesquisarClientes.sgPesquisarClientesDblClick(Sender: TObject);
+var
+  linha:Integer;
+begin
+
+  linha := sgPesquisarClientes.Row;
+
+  if linha=0 then Exit;
+
+  id_selecionado := StrToIntDef(sgPesquisarClientes.Cells[0,linha],0);
+
+end;
 
 end.

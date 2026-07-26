@@ -1,7 +1,7 @@
 unit _Cliente;
 
 interface
-uses System.SysUtils, system.Generics.Collections,system.Classes, ZDataset;
+uses System.SysUtils, system.Generics.Collections,system.Classes, ZDataset,StrUtils;
 type
   TCliente = class
   private
@@ -48,6 +48,7 @@ type
     procedure Atualizar(AId:Integer);
     procedure Excluir;
     procedure MapearParametros(qry:TZQuery);
+    procedure ExecultarSql(const sql:string; const mapear_paramentros: TProc<TZQuery>);
 
     function Buscar():TZQuery;
     function BuscarPorId(const Value:Integer):TCliente;
@@ -66,20 +67,8 @@ begin
 end;
 
 procedure TCliente.Atualizar;
-var
-  qry: TZQuery;
-  Conn: TZConnection;
 begin
-  if FCliente_id <= 0 then
-    raise Exception.Create('Cliente inválido para atualização.');
-
-  Conn := dmConexaoOracle.zConexao;
-
-  qry := TZQuery.Create(nil);
-  try
-    qry.Connection := Conn;
-
-    qry.SQL.Text :=
+  ExecultarSql(
       'update CLIENTES set ' +
       'NOME = :NOME, ' +
       'DATA_NASCIMENTO = :DATA_NASCIMENTO, ' +
@@ -94,41 +83,13 @@ begin
       'CIDADE = :CIDADE, ' +
       'UF = :UF, ' +
       'CEP = :CEP ' +
-      'where CLIENTE_ID = :CLIENTE_ID';
-
-    qry.ParamByName('CLIENTE_ID').AsInteger       := FCliente_id;
-    qry.ParamByName('NOME').AsString              := FNome;
-    qry.ParamByName('DATA_NASCIMENTO').AsDateTime := FData_nascimento;
-    qry.ParamByName('STATUS').AsString            := FStatus;
-    qry.ParamByName('CPF_CNPJ').AsString          := FCpf_cnpj;
-    qry.ParamByName('TELEFONE').AsString          := FTelefone;
-    qry.ParamByName('EMAIL').AsString             := FEmail;
-    qry.ParamByName('DATA_CADASTRO').AsDateTime   := FData_cadastro;
-    qry.ParamByName('LIMITE').AsCurrency          := FLimite;
-    qry.ParamByName('ENDERECO').AsString          := FEndereco;
-    qry.ParamByName('BAIRRO').AsString            := FBairro;
-    qry.ParamByName('CIDADE').AsString            := FCidade;
-    qry.ParamByName('UF').AsString                := FUf;
-    qry.ParamByName('CEP').AsString               := FCep;
-
-    if not Conn.InTransaction then
-      Conn.StartTransaction;
-
-    try
-      qry.ExecSQL;
-
-      if qry.RowsAffected = 0 then
-        raise Exception.Create('Nenhum registro foi atualizado.');
-
-      Conn.Commit;
-    except
-      Conn.Rollback;
-      raise;
-    end;
-
-  finally
-    qry.Free;
-  end;
+      'where CLIENTE_ID = :CLIENTE_ID',
+      procedure(qry: TZQuery)
+      begin
+        MapearParametros(qry);
+        qry.ParamByName('CLIENTE_ID').AsInteger := FCliente_id;
+      end
+  )
 end;
 
 
@@ -214,7 +175,7 @@ begin
         'from CLIENTES ' +
         'where CLIENTE_ID = :CLIENTE_ID';
 
-        qry.ParamByName('CLIENTE_ID').AsInteger := Value;
+    qry.ParamByName('CLIENTE_ID').AsInteger := Value;
 
     qry.Open;
 
@@ -243,15 +204,8 @@ begin
 end;
 
 procedure TCliente.Cadastrar;
-var qry:TZQuery; conn:TZConnection;
 begin
-  qry:= TZQuery.Create(nil);
-  conn := dmConexaoOracle.zConexao;
-
-  try
-    qry.Connection := conn;
-
-    qry.SQL.Text :=
+  ExecultarSql(
       'insert into CLIENTES (' +
       'NOME, DATA_NASCIMENTO, STATUS, CPF_CNPJ, ' +
       'TELEFONE, EMAIL, DATA_CADASTRO, LIMITE, ' +
@@ -259,67 +213,49 @@ begin
       'values (' +
       ':NOME, :DATA_NASCIMENTO, :STATUS, :CPF_CNPJ, ' +
       ':TELEFONE, :EMAIL, :DATA_CADASTRO, :LIMITE, ' +
-      ':ENDERECO, :BAIRRO, :CIDADE, :UF, :CEP)';
-
-    qry.ParamByName('NOME').AsString              := FNome;
-    qry.ParamByName('DATA_NASCIMENTO').AsDateTime := FData_nascimento;
-    qry.ParamByName('STATUS').AsString            := FStatus;
-    qry.ParamByName('CPF_CNPJ').AsString          := FCpf_cnpj;
-
-    qry.ParamByName('TELEFONE').AsString        := FTelefone;
-    qry.ParamByName('EMAIL').AsString           := FEmail;
-    qry.ParamByName('DATA_CADASTRO').AsDateTime := FData_cadastro;
-    qry.ParamByName('LIMITE').AsCurrency        := FLimite;
-
-    qry.ParamByName('ENDERECO').AsString := FEndereco;
-    qry.ParamByName('BAIRRO').AsString   := FBairro;
-    qry.ParamByName('CIDADE').AsString   := FCidade;
-    qry.ParamByName('UF').AsString       := FUf;
-    qry.ParamByName('CEP').AsString      := FCep;
-
-    if not conn.InTransaction then
-      conn.StartTransaction;
-
-    try
-      qry.ExecSQL;
-      conn.Commit;
-    except
-      conn.Rollback;
-      raise;
-    end;
-  finally
-    qry.Free;
-  end;
+      ':ENDERECO, :BAIRRO, :CIDADE, :UF, :CEP)',
+      procedure(qry:TZQuery)
+      begin
+        MapearParametros(qry);
+      end
+  );
 end;
 
 procedure TCliente.Excluir;
-var
-  qry:TZQuery;
-  conn:TZConnection;
 begin
   if FCliente_id <=0 then
     raise Exception.Create('Cliente inválido para excluir.');
 
+
+  ExecultarSql(
+    'delete from CLIENTES where CLIENTE_ID = :CLIENTE_ID',
+    procedure(qry:TZQuery)
+    begin
+      qry.ParamByName('CLIENTE_ID').Value := FCliente_id;
+    end
+  );
+end;
+
+procedure TCliente.ExecultarSql(const sql: string;
+  const mapear_paramentros: TProc<TZQuery>);
+var
+  qry: TZQuery;
+  conn: TZConnection;
+begin
   conn := dmConexaoOracle.zConexao;
-  qry:= TZQuery.Create(nil);
-
+  qry := TZQuery.Create(nil);
   try
-    qry.Connection:=conn;
-    qry.SQL.Text :=
-    'delete from CLIENTES ' +
-    'where CLIENTE_ID = :CLIENTE_ID';
+    qry.Connection := conn;
+    qry.SQL.Text := sql;
 
-    qry.ParamByName('CLIENTE_ID').AsInteger := FCliente_id;
+    if Assigned(mapear_paramentros) then
+      mapear_paramentros(qry);
 
     if not conn.InTransaction then
       conn.StartTransaction;
 
     try
       qry.ExecSQL;
-
-      if qry.RowsAffected=0 then
-        raise Exception.Create('Nem um registro foi excluido.');
-
       conn.Commit;
     except
       conn.Rollback;
@@ -330,6 +266,7 @@ begin
     qry.Free;
   end;
 end;
+
 procedure TCliente.MapearParametros(qry:TZQuery);
 begin
   qry.ParamByName('NOME').AsString              := FNome;
@@ -348,5 +285,6 @@ begin
   qry.ParamByName('UF').AsString       := FUf;
   qry.ParamByName('CEP').AsString      := FCep;
 end;
+
 
 end.

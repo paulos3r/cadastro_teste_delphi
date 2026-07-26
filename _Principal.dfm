@@ -24,8 +24,21 @@ object FormPrincipal: TFormPrincipal
       object N1: TMenuItem
         Caption = '-'
       end
-      object PRODUTOS1: TMenuItem
-        Caption = 'PRODUTOS'
+      object AGENDAMENTO1: TMenuItem
+        Caption = 'AGENDAMENTO'
+        OnClick = AGENDAMENTO1Click
+      end
+    end
+    object AGENDAMENTO2: TMenuItem
+      Caption = 'RELAT'#211'RIO'
+      object CLIENTE1: TMenuItem
+        Caption = 'CLIENTE'
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object AGENDAMENTO3: TMenuItem
+        Caption = 'AGENDAMENTO'
       end
     end
   end

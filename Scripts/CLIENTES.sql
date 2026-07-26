@@ -11,12 +11,10 @@ create table CLIENTES (
   LIMITE        number(10,2) default 0 not null,
   FORMA_PAGAMENTO_PADRAO varchar2(20),
   
-  ENDERECO    varchar(30),
-  BAIRRO      varchar(20),
-  CIDADE      varchar(23),
-  UF          varchar(2),
-  CEP         varchar(9),
-    
-  constraint CK_CLIENTE_CEP check (regexp_like(CEP, '^[0-9]{5}-[0-9]{3}$')),
+  ENDERECO    varchar2(30),
+  BAIRRO      varchar2(20),
+  CIDADE      varchar2(23),
+  UF          varchar2(2),
+  CEP         varchar2(9),
   constraint CK_CLIENTE_STATUS check (STATUS in ('ATIVO','INATIVO'))
 )
