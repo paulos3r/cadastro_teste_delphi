@@ -95,6 +95,7 @@ begin
     StrToInt( leAgendamentoCodigoCliente.Text  ),
     StrToInt( leAgendamentoCodigoAtendente.Text ),
     Date,
+    leAgendamentoDescricao.Text,
     memoObservacao.Text
   );
 

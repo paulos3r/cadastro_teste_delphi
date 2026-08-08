@@ -22,8 +22,10 @@ type
 
     procedure Atualizar(agendamento_id,cliente_id,atendente_id:Integer; data:TDateTime; nome,observacao:string);
     procedure Cadastrar(agendamento_id,cliente_id,atendente_id:Integer; data:TDateTime; nome,observacao:string);
-    procedure BuscarPorId(agendamento_id:Integer);
     procedure Excluir(agendamento_id:Integer);
+
+    function BuscarPorId(agendamento_id:Integer):TAgendamento;
+    function Buscar():TAgendamento;
   end;
 
 implementation
@@ -71,7 +73,14 @@ begin
   end;
 end;
 
-procedure TAgendamento.BuscarPorId(agendamento_id:Integer);
+function TAgendamento.Buscar: TAgendamento;
+var qry: TZQuery;
+  conn : TZConnection;
+begin
+
+end;
+
+function TAgendamento.BuscarPorId(agendamento_id:Integer):TAgendamento;
 var 
   qry: TZQuery;
   conn: TZConnection;
